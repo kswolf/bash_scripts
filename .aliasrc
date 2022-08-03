@@ -1,0 +1,8 @@
+alias kill_server='pkill runserver.sh;pkill gunicorn'
+alias psrs='ps -ef | grep runserver'
+alias rs='$HOME/vscode/www/apps/./runserver.sh &'
+alias rs_hot='$HOME/vscode/www/apps/./runserver.sh --react_hot_url "https://localhost:8080" &'
+alias rs_pdb='$HOME/vscode/www/apps/./runserver.sh --pdb  --react_hot_url "https://localhost:8080"'
+alias rs_pdb_watch='$HOME/vscode/www/apps/./runserver.sh --pdb'
+alias rs_ngrok='$HOME/vscode/www/apps/./runserver.sh --react_hot_url "http://404146f0.ngrok.io" &'
+alias rs_log='tail -f /tmp/runserver.log'
