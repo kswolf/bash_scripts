@@ -23,7 +23,7 @@ function gcm {
    git commit -m "$1"
 }
 
-function g_push {
+function gush {
    branch=$(git rev-parse --abbrev-ref HEAD)
    echo "push origin $branch"
    git push origin $branch
@@ -54,7 +54,7 @@ function ga {
    done
 }
 
-function ga_low {
+function ga_l {
    ORANGE='\033[0;33m'
    GREEN='\033[0;32m'
    NC='\033[0m' # No Color
@@ -76,6 +76,38 @@ function ga_low {
    base_project_path
    echo -e "${GREEN}git add $file${NC}"
    git add $file
+}
+
+function ga_z {
+   ORANGE='\033[0;33m'
+   GREEN='\033[0;32m'
+   NC='\033[0m' # No Color
+   local file="$1"
+   if [[ $1 =~ ^-?[0-9]+$ ]]; then
+      file=$(git_pos $1)
+   fi
+   base_project_path
+   if [[ $file == *.js ]]; then
+      echo -e "${ORANGE}ES Linting: $file${NC}"
+      base_react_path
+      ./node_modules/.bin/eslint --fix --color $file | tee /tmp/eslint.out 2> /dev/null
+   fi
+
+   if [[ $file == *.py ]]; then
+      echo -e "${ORANGE}Py Linting: $file${NC}"
+      py2lint $file | tee /tmp/py2lint.out 2> /dev/null
+   fi
+   base_project_path
+   echo -e "${GREEN}git add $file${NC}"
+   git add $file
+}
+
+function gd {
+   local file="$1"
+   if [[ $1 =~ ^-?[0-9]+$ ]]; then
+      file=$(git_pos $1)
+   fi
+   git diff $file
 }
 
 function git_pos {
