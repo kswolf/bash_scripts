@@ -29,40 +29,52 @@ function g_push {
    git push origin $branch
 }
 
-function ga_pro {
-   PS3='Please select file numbers to add to PR: '
-   local opt_values=()
+function ga {
+   CYAN='\033[0;36m'
+   NC='\033[0m' # No Color
+   i=0
    while read line ; do 
-      opt_values+=( "$line" )
+      i=$(( i + 1 ))
+      echo "$i) $line"
    done < <(git ls-files -m)
-   opt_values+=("exit")
-   COLUMNS=0
-   select opt in "${opt_values[@]}"; do
-      [[ $opt == "exit" ]] && break
-      echo "$opt selected"
-      ga $opt
-      break
+
+   
+   while true; do
+      read -p "Select (multi comma separated)? " vals
+      IFS=',' read -r -a array <<< "$vals"
+      files=()
+      for num in  "${array[@]}"; do
+         file=$(git_pos $num)
+         files+=($file)
+      done
+      for f in "${files[@]}"; do
+         ga_low $f
+      done
+      break;
    done
 }
 
-function ga {
+function ga_low {
+   ORANGE='\033[0;33m'
+   GREEN='\033[0;32m'
+   NC='\033[0m' # No Color
    local file="$1"
    if [[ $1 =~ ^-?[0-9]+$ ]]; then
       file=$(git_pos $1)
    fi
    base_project_path
    if [[ $file == *.js ]]; then
-      echo "ES Linting: $file"
+      echo -e "${ORANGE}ES Linting: $file${NC}"
       base_react_path
       ./node_modules/.bin/eslint --fix --color $file | tee /tmp/eslint.out 2> /dev/null
    fi
 
    if [[ $file == *.py ]]; then
-      echo "Py Linting: $file"
+      echo -e "${ORANGE}Py Linting: $file${NC}"
       py2lint $file | tee /tmp/py2lint.out 2> /dev/null
    fi
    base_project_path
-   echo "git add $file"
+   echo -e "${GREEN}git add $file${NC}"
    git add $file
 }
 
