@@ -19,6 +19,16 @@ function base_project_path { cd ~/vscode; }
 
 function base_react_path { cd ~/vscode/www/react; }
 
+function gcm {
+   git commit -m "$1"
+}
+
+function g_push {
+   branch=$(git rev-parse --abbrev-ref HEAD)
+   echo "push origin $branch"
+   git push origin $branch
+}
+
 function ga_pro {
    PS3='Please select file numbers to add to PR: '
    local opt_values=()
