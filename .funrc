@@ -1,16 +1,22 @@
 # Place all functions below
 function r_l_test { ./node_modules/.bin/jest -u __tests__/roleLibrary/$1; }
 
+function base_project_path { cd ~/vscode; }
+
+function base_react_path { cd ~/vscode/www/react; }
+
 function git_add {
-   echo "Linting: $1"
-   cd ~/vscode
-   if [[$1 == *.js]]; then
-      cd vscode/www/react
+   base_project_path
+   if [[ $1 == *.js ]]; then
+      echo "ES Linting: $1"
+      base_react_path
       ./node_modules/.bin/eslint --fix --color $1 | tee /tmp/eslint.out 2> /dev/null
    fi
 
-   if [[$1 == *.py]]; then
+   if [[ $1 == *.py ]]; then
       py2lint $1 | tee /tmp/py2lint.out 2> /dev/null
    fi
-   cd ~/vscode
+   base_project_path
+   echo "git add $1"
+   git add $1
 }
