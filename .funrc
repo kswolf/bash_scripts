@@ -1,22 +1,70 @@
 # Place all functions below
 function r_l_test { ./node_modules/.bin/jest -u __tests__/roleLibrary/$1; }
 
+function rebase_branch {
+   cd ~/code/vscode;
+   git reset HEAD~;
+   git clean -fd;
+   git stash push -m "$(date)"
+   git checkout $1;
+   git pull origin $1
+
+}
+
+# GIT FUNCTIONS
+
+function gs { git status; }
+
 function base_project_path { cd ~/vscode; }
 
 function base_react_path { cd ~/vscode/www/react; }
 
-function git_add {
+function ga_pro {
+   PS3='Please select file numbers to add to PR: '
+   local opt_values=()
+   while read line ; do 
+      opt_values+=( "$line" )
+   done < <(git ls-files -m)
+   opt_values+=("exit")
+   COLUMNS=0
+   select opt in "${opt_values[@]}"; do
+      [[ $opt == "exit" ]] && break
+      echo "$opt selected"
+      ga $opt
+      break
+   done
+}
+
+function ga {
+   local file="$1"
+   if [[ $1 =~ ^-?[0-9]+$ ]]; then
+      file=$(git_pos $1)
+   fi
    base_project_path
-   if [[ $1 == *.js ]]; then
-      echo "ES Linting: $1"
+   if [[ $file == *.js ]]; then
+      echo "ES Linting: $file"
       base_react_path
-      ./node_modules/.bin/eslint --fix --color $1 | tee /tmp/eslint.out 2> /dev/null
+      ./node_modules/.bin/eslint --fix --color $file | tee /tmp/eslint.out 2> /dev/null
    fi
 
-   if [[ $1 == *.py ]]; then
-      py2lint $1 | tee /tmp/py2lint.out 2> /dev/null
+   if [[ $file == *.py ]]; then
+      echo "Py Linting: $file"
+      py2lint $file | tee /tmp/py2lint.out 2> /dev/null
    fi
    base_project_path
-   echo "git add $1"
-   git add $1
+   echo "git add $file"
+   git add $file
+}
+
+function git_pos {
+   regex="modified:[ ]*(.*?)"
+   i=0
+   git ls-files -m | while read line ;
+   do 
+      i=$(( i + 1 ))
+      if [ $i == $1 ]; then
+         echo $line
+         return 1         
+      fi
+   done 
 }
