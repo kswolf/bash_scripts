@@ -2,7 +2,6 @@
 function r_l_test { ./node_modules/.bin/jest -u __tests__/roleLibrary/$1; }
 
 function rebase_branch {
-   cd ~/code/vscode;
    git reset HEAD~;
    git clean -fd;
    git stash push -m "$(date)"
