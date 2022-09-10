@@ -26,7 +26,7 @@ function grb {
    branch=$(git rev-parse --abbrev-ref HEAD)
    git checkout $1
    branch_new=$(git rev-parse --abbrev-ref HEAD)
-   if [[ branch_new -ne $1]]; then
+   if [[ $branch_new -ne $1]]; then
       return
    fi
    gull
