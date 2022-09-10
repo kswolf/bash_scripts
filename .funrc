@@ -115,7 +115,7 @@ function ga {
       fi
    fi
    base_project_path
-   echo -e "${GREEN}git add $file${NC}"
+   echo -e "${GREEN}git add $f${NC}"
    git add $f
 }
 
