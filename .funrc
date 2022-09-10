@@ -5,8 +5,8 @@ function rebase_branch {
    git reset HEAD~;
    git clean -fd;
    git stash push -m "$(date)"
-   git checkout $1;
-   git pull origin $1
+   branch=$(git rev-parse --abbrev-ref HEAD)
+   git pull origin $branch
 
 }
 
@@ -57,24 +57,48 @@ function ga {
    ORANGE='\033[0;33m'
    GREEN='\033[0;32m'
    NC='\033[0m' # No Color
-   local file="$1"
+   local f="$1"
    if [[ $1 =~ ^-?[0-9]+$ ]]; then
-      file=$(git_pos $1)
+      f=$(git_pos $1)
    fi
    base_project_path
-   if [[ $file == *.js ]]; then
+   if [[ $f == *.js ]]; then
       echo -e "${ORANGE}ES Linting: $file${NC}"
       base_react_path
-      ./node_modules/.bin/eslint --fix --color $file
+      ./www/react/node_modules/.bin/eslint --fix --color "$REL_FILE" | tee /tmp/eslint.out 2> /dev/null
+      STATUS=( "${PIPESTATUS[@]}" )
+      if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
+         echo "Linting error"
+         exit 1
+      fi
    fi
 
-   if [[ $file == *.py ]]; then
+   if [[ $f == *.py ]]; then
       echo -e "${ORANGE}Py Linting: $file${NC}"
-      py2lint $file | tee /tmp/py2lint.out 2> /dev/null
+      py2lint $f | tee /tmp/py2lint.out 2> /dev/null
+      STATUS=( "${PIPESTATUS[@]}" ) 
+      if [[ `grep wrong-import-order /tmp/py2lint.out` || `grep ungrouped-imports /tmp/py2lint.out`  ]]; then
+         if [[ ! `which reorder-python-imports` ]]; then
+         pip install reorder-python-imports
+         fi 
+         echo Running reorder-python-imports on $f
+         reorder-python-imports "$BASEDIR/$f" --application-directories "$BASEDIR/www"
+      fi
+      if [[ `grep unused-import /tmp/py2lint.out` ]]; then
+         if [[ ! `which autoflake` ]]; then
+         pip install autoflake
+         fi 
+         echo Running remove-unused-imports on $f
+         autoflake --in-place --remove-all-unused-imports "$BASEDIR/$f"
+      fi
+      if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
+         echo "Linting error"
+         exit 1
+      fi
    fi
    base_project_path
    echo -e "${GREEN}git add $file${NC}"
-   git add $file
+   git add $f
 }
 
 function gd {
