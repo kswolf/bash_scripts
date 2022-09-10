@@ -6,4 +6,4 @@ alias rs_pdb='$HOME/vscode/www/apps/./runserver.sh --pdb  --react_hot_url "https
 alias rs_pdb_watch='$HOME/vscode/www/apps/./runserver.sh --pdb'
 alias rs_ngrok='$HOME/vscode/www/apps/./runserver.sh --react_hot_url "http://404146f0.ngrok.io" &'
 alias rs_log='tail -f /tmp/runserver.log'
-alias git_wc='git whatchanged origin/master..HEAD --format=oneline --name-only | grep -vE "^[0-9a-f]{40} "" | sort | uniq'
+alias git_wc='git whatchanged origin/master..HEAD --format=oneline --name-only | grep -vE "^[0-9a-f]{40} " | sort | uniq'
