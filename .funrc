@@ -65,7 +65,8 @@ function ga {
    if [[ $f == *.js ]]; then
       echo -e "${ORANGE}ES Linting: $f${NC}"
       base_react_path
-      ./node_modules/.bin/eslint --fix --color $f | tee /tmp/eslint.out 2> /dev/null
+      REL_FILE="$(echo "$f" | cut -d'/' -f3-)"
+      ./node_modules/.bin/eslint --fix --color "$REL_FILE" | tee /tmp/eslint.out 2> /dev/null
       STATUS=( "${PIPESTATUS[@]}" )
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
