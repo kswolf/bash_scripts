@@ -28,6 +28,12 @@ function gush {
    git push origin $branch
 }
 
+function gull {
+   branch=$(git rev-parse --abbrev-ref HEAD)
+   echo "pull origin $branch"
+   git pull origin $branch
+}
+
 function ga_pro {
    CYAN='\033[0;36m'
    NC='\033[0m' # No Color
