@@ -25,6 +25,10 @@ function gcm {
 function grb {
    branch=$(git rev-parse --abbrev-ref HEAD)
    git checkout $1
+   branch_new=$(git rev-parse --abbrev-ref HEAD)
+   if [[ branch_new -ne $1]]; then
+      return
+   fi
    gull
    git checkout $branch
 }
@@ -83,7 +87,7 @@ function ga {
       STATUS=( "${PIPESTATUS[@]}" )
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
-         exit 1
+         return
       fi
    fi
 
@@ -107,7 +111,7 @@ function ga {
       fi
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
-         exit 1
+         return
       fi
    fi
    base_project_path
