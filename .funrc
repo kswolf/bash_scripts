@@ -101,14 +101,14 @@ function ga {
          pip install reorder-python-imports
          fi 
          echo Running reorder-python-imports on $f
-         reorder-python-imports "$BASEDIR/$f" --application-directories "$BASEDIR/www"
+         reorder-python-imports "$base_project_path/$f" --application-directories "$base_project_path/www"
       fi
       if [[ `grep unused-import /tmp/py2lint.out` ]]; then
          if [[ ! `which autoflake` ]]; then
          pip install autoflake
          fi 
          echo Running remove-unused-imports on $f
-         autoflake --in-place --remove-all-unused-imports "$BASEDIR/$f"
+         autoflake --in-place --remove-all-unused-imports "$base_project_path/$f"
       fi
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
