@@ -98,7 +98,7 @@ function ga {
    if [[ $f == *.py ]]; then
       base_www_path
       echo -e "${ORANGE}Py Linting: $f${NC}"
-      py2lint "BASEDIR/$f" | tee /tmp/py2lint.out 2> /dev/null
+      py2lint "$BASEDIR/$f" | tee /tmp/py2lint.out 2> /dev/null
       STATUS=( "${PIPESTATUS[@]}" ) 
       if [[ `grep wrong-import-order /tmp/py2lint.out` || `grep ungrouped-imports /tmp/py2lint.out`  ]]; then
          if [[ ! `which reorder-python-imports` ]]; then
