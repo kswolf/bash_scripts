@@ -79,7 +79,7 @@ function ga {
       f=$(git_pos $1)
    fi
    base_project_path
-   BASEDIR="~/vscode"
+   BASEDIR="/home/ec2-user/vscode"
    if [[ $f == *.js ]]; then
       echo -e "${ORANGE}ES Linting: $f${NC}"
       base_react_path
