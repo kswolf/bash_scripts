@@ -18,6 +18,8 @@ function base_project_path { cd ~/vscode; }
 
 function base_react_path { cd ~/vscode/www/react; }
 
+function base_www_path { cd ~/vscode/www/react; }
+
 function gcm {
    git commit -m "$1"
 }
@@ -94,6 +96,7 @@ function ga {
    fi
 
    if [[ $f == *.py ]]; then
+      base_www_path
       echo -e "${ORANGE}Py Linting: $file${NC}"
       py2lint $f | tee /tmp/py2lint.out 2> /dev/null
       STATUS=( "${PIPESTATUS[@]}" ) 
