@@ -116,6 +116,7 @@ function ga {
       fi
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
+         base_project_path
          return
       fi
    fi
