@@ -79,6 +79,7 @@ function ga {
       f=$(git_pos $1)
    fi
    base_project_path
+   BASEDIR = "~/vscode"
    if [[ $f == *.js ]]; then
       echo -e "${ORANGE}ES Linting: $f${NC}"
       base_react_path
@@ -101,14 +102,14 @@ function ga {
          pip install reorder-python-imports
          fi 
          echo Running reorder-python-imports on $f
-         reorder-python-imports "$base_project_path/$f" --application-directories "$base_project_path/www"
+         reorder-python-imports "$BASEDIR/$f" --application-directories "$BASEDIR/www"
       fi
       if [[ `grep unused-import /tmp/py2lint.out` ]]; then
          if [[ ! `which autoflake` ]]; then
          pip install autoflake
          fi 
          echo Running remove-unused-imports on $f
-         autoflake --in-place --remove-all-unused-imports "$base_project_path/$f"
+         autoflake --in-place --remove-all-unused-imports "$BASEDIR/$f"
       fi
       if [[ $STATUS -ne 0 && $STATUS -ne 139 && $STATUS -ne 124 && $STATUS -ne 137 ]]; then
          echo "Linting error"
